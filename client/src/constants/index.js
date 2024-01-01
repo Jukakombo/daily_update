@@ -1,0 +1,34 @@
+export const FETCH_CONTACTS = "FETCH_CONTACTS";
+export const CREATE_CONTACT = "CREATE_CONTACT";
+export const UPDATE_CONTACT = "UPDATE_CONTACT";
+export const DELETE_CONTACT = "DELETE_CONTACT";
+// news constants
+export const FETCH_NEWS = "FETCH_NEWS";
+export const CREATE_NEWS = "CREATE_NEWS";
+export const UPDATE_NEWS = "UPDATE_NEWS";
+export const DELETE_NEWS = "DELETE_NEWS";
+// courses constants
+export const CREATE__COURSE = "CREATE__COURSE";
+export const FETCH__COURSES = "FETCH__COURSES";
+export const UPDATE__COURSE = "UPDATE__COURSE";
+export const DELETE__COURSE = "DELETE__COURSE";
+// comments constants
+export const FETCH_COMMENTS = "FETCH_COMMENTS";
+export const CREATE_COMMENT = "CREATE_COMMENT";
+export const UPDATE_COMMENT = "UPDATE_COMMENT";
+export const DELETE_COMMENT = "DELETE_COMMENT";
+// REGISTRATION constants
+export const FETCH_REGISTRATION = "FETCH_REGISTRATION";
+export const CREATE_REGISTRATION = "CREATE_REGISTRATION";
+export const UPDATE_REGISTRATION = "UPDATE_REGISTRATION";
+export const DELETE_REGISTRATION = "DELETE_REGISTRATION";
+// NGO DATAS
+export const FETCH_NGODATA = "FETCH_NGODATA";
+export const CREATE_NGODATA = "CREATE_NGODATA";
+export const UPDATE_NGODATA = "UPDATE_NGODATA";
+export const DELETE_NGODATA = "DELETE_REGISTRATION";
+
+export const AUTH = "AUTH";
+export const LOGOUT = "LOGOUT";
+
+export const USER__REGISTRATIONDATA = "USER__REGISTRATIONDATA";
