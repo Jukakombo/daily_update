@@ -1,8 +1,8 @@
 import React from "react";
-
+import "../index.css";
 const Footer = () => {
   return (
-    <div className="mt-4 footer">
+    <div className="mt-60 footer">
       <div className=" sb_footer section_p">
         <div className="footer_link">
           <div className="footer_linkd">
@@ -34,7 +34,11 @@ const Footer = () => {
           <div className="footer_linkd">
             <h4>Partners</h4>
             <a href="/person">
-              <p>Tech </p>
+              <p>Technicien </p>
+              <p>Designer </p>
+              <p>Programmes</p>
+              <p>Developers</p>
+              <p>Solutions Maker</p>
             </a>
           </div>
           <div className="footer_linkd">

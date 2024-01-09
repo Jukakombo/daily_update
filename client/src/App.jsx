@@ -1,29 +1,42 @@
-import { useEffect, useState } from "react";
-import Index from "./pages/Index";
-import { useDispatch } from "react-redux";
-import { getContacts } from "./actions/contacts";
-import { getNews } from "./actions/news";
+// client/src/App.js
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./common/Navbar";
+import Footer from "./common/Footer";
+import Form from "./components/Form";
+import AdminPage from "./components/AdminPage";
+import AuthForm from "./components/AuthForm";
+import PrivateRoute from "./components/PrivateRoute.jsx";
+import { logout, getCurrentUser } from "./auth.js";
+
 const App = () => {
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    dispatch(getContacts());
-  }, [dispatch]);
+  const handleLogout = () => {
+    logout();
+  };
 
-  useEffect(() => {
-    dispatch(getNews());
-  }, [dispatch]);
+  const handleLogin = () => {
+    // Your login logic here
+    console.log("User logged in");
+  };
 
-  useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 5000);
-  }, []);
   return (
-    <div>
-      <Index />
-    </div>
+    <>
+      <Navbar
+        isAuthenticated={!!getCurrentUser()}
+        handleLogout={handleLogout}
+      />
+      <Routes>
+        <Route path="/user" element={<Form />} />
+        <Route
+          path="/admin_page"
+          element={<AdminPage />}
+          allowedRole="admin_page"
+        />
+        {/* Pass onLogin prop to AuthForm */}
+        <Route path="/auth_form" element={<AuthForm onLogin={handleLogin} />} />
+      </Routes>
+      <Footer />
+    </>
   );
 };
 

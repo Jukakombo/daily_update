@@ -1,29 +1,23 @@
-/* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+// Form.jsx
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createContact, updateContact } from "../actions/contacts";
-// Function to get yesterday's date with custom format (MM/DD/YYYY)
+import { createContact } from "../actions/Contacts";
+import AuthForm from "./AuthForm";
+import { redirect, useNavigate } from "react-router-dom";
+
+const API_BASE_URL = "http://localhost:5000";
+const CONTACTS_ENDPOINT = "/contacts";
+
 const getYesterdayDate = () => {
   const yesterdayDate = new Date();
   yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-
-  // Format the date as "MM/DD/YYYY"
-  const month = String(yesterdayDate.getMonth() + 1).padStart(2, "0");
-  const day = String(yesterdayDate.getDate()).padStart(2, "0");
-  const year = yesterdayDate.getFullYear();
-
-  const formattedDate = `${month}/${day}/${year}`;
+  const formattedDate = yesterdayDate.toLocaleDateString("en-US");
   return formattedDate;
 };
 
-// Function to get current date with custom format (DD/MM/YYYY)
 const getCurrentDate = () => {
   const currentDate = new Date();
-
-  // Format the date as "DD/MM/YYYY"
-  const options = { day: "2-digit", month: "2-digit", year: "numeric" };
-  const formattedDate = currentDate.toLocaleDateString(undefined, options);
-
+  const formattedDate = currentDate.toLocaleDateString("en-US");
   return formattedDate;
 };
 
@@ -35,19 +29,25 @@ const initialState = {
   today_date: getCurrentDate(),
   role_block: "",
 };
+
 const Form = ({ currentId, setCurrentId }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState(initialState);
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [apiKey, setApiKey] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const {
-    name,
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    const apiKey = "b6fcd10c863acc1086d5e187440c5cdadad77da6";
 
-    yesterday_task,
-    today_task,
-    yesterday_date,
-    today_date,
-    role_block,
-  } = formData;
+    setApiKey(apiKey);
+  };
+
+  const { name, yesterday_task, today_task, role_block } = formData;
 
   const updateMyTask = useSelector((state) =>
     currentId ? state.contacts.find((p) => p._id === currentId) : null
@@ -57,102 +57,177 @@ const Form = ({ currentId, setCurrentId }) => {
     if (updateMyTask) setFormData(updateMyTask);
   }, [updateMyTask]);
 
-  const handleSubmit = () => {
-    // e.preventDefault();
-    if (currentId) {
-      dispatch(updateContact(currentId, formData));
-      clear();
-    } else {
-      dispatch(createContact(formData));
-      clear();
+  const clear = () => {
+    if (typeof setCurrentId === "function") {
+      setFormData(initialState);
+      setCurrentId(0);
     }
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!isAuthenticated) {
+      setError("Authentication required. Please log in.");
+      setTimeout(() => setError(""), 3000);
+      return;
+    }
+
+    setLoading(true);
+
+    const headers = {
+      "Content-Type": "application/json",
+      "API-Key": apiKey,
+    };
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}${CONTACTS_ENDPOINT}${
+          currentId ? `/${currentId}` : ""
+        }`,
+        {
+          method: currentId ? "PATCH" : "POST",
+          headers,
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.message) {
+        setError(data.message);
+      } else {
+        setSuccessMessage(
+          currentId
+            ? "Task updated successfully!"
+            : "Task created successfully!"
+        );
+
+        redirect("/admin_page");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setError("An error occurred. Please try again later.");
+    }
+
+    setLoading(false);
+    setTimeout(() => setSuccessMessage(""), 3000);
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  const clear = () => {
-    setFormData({
-      name: "",
-      yesterday_task: "",
-      today_task: "",
-      role_block: "",
-    });
-    setCurrentId(0);
-  };
 
   return (
-    <div className="w-10/12 m-auto shadow-md ">
-      <h1 className="text-center font-bold">Daily Update</h1>
-      <form className="" onSubmit={handleSubmit}>
-        <div className="flex flex-col text-xl">
-          <label className="py-2 px-2" htmlFor="person_name">
-            Person
-          </label>
-          <input
-            type="text"
-            id="person_name"
-            placeholder="Full name..."
-            className="outline-none w-full border-[1px] p-2"
-            name="name"
-            value={name}
-            onChange={handleChange}
-          />
+    <div>
+      {isAuthenticated ? (
+        <div className="container mx-auto p-8">
+          <h1 className="text-center font-bold text-2xl mb-8">Daily Update</h1>
+
+          {error && (
+            <p className="border border-red-500 bg-red-500 text-white p-2 rounded-md text-center mb-8">
+              {error}
+            </p>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col text-xl">
+              <label className="py-2 px-2" htmlFor="person_name">
+                Person:
+              </label>
+              <input
+                type="text"
+                id="person_name"
+                placeholder="Full name..."
+                className="outline-none w-full border-[1px] p-2"
+                name="name"
+                value={name}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="flex flex-col text-xl">
+              <div className="flex items-center justify-between px-2">
+                <label className="py-2 px-2" htmlFor="today_task">
+                  Today Date:
+                </label>
+                <span>{getCurrentDate()}</span>
+              </div>
+              <select
+                id="today_task"
+                className="outline-none w-full border-[1px] p-2"
+                name="today_task"
+                value={today_task}
+                onChange={handleChange}
+              >
+                <option value="">Select task for today</option>
+                <option value="task1">Task 1</option>
+                <option value="task2">Task 2</option>
+                {/* Add more options as needed */}
+              </select>
+            </div>
+
+            <div className="flex flex-col text-xl">
+              <div className="flex items-center justify-between px-2">
+                <label className="py-2 px-2" htmlFor="yesterday">
+                  Yesterday Date:
+                </label>
+                <span>{getYesterdayDate()}</span>
+              </div>
+              <select
+                id="yesterday"
+                className="outline-none w-full border-[1px] p-2"
+                name="yesterday_task"
+                value={yesterday_task}
+                onChange={handleChange}
+              >
+                <option value="">Select task for yesterday</option>
+                <option value="task1">Task 1</option>
+                <option value="task2">Task 2</option>
+                {/* Add more options as needed */}
+              </select>
+            </div>
+
+            <div className="flex flex-col text-xl">
+              <label className="py-2 px-2" htmlFor="role_block">
+                Roald Block:
+              </label>
+              <select
+                id="role_block"
+                className="outline-none w-full border-[1px] p-2"
+                name="role_block"
+                onChange={handleChange}
+                value={role_block}
+              >
+                <option value="">Select a role</option>
+                <option value="role1">Role 1</option>
+                <option value="role2">Role 2</option>
+                {/* Add more options as needed */}
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-blue-400 text-white font-bold py-2 mt-4"
+              disabled={loading}
+            >
+              {loading
+                ? "Loading..."
+                : currentId
+                ? "Update Task"
+                : "Create Task"}
+            </button>
+
+            {successMessage && (
+              <p className="border border-green-500 bg-green-500 text-white p-2 rounded-md text-center mt-4">
+                {successMessage}
+              </p>
+            )}
+          </form>
         </div>
-        <div className="flex flex-col text-xl">
-          <div className="flex items-center justify-between px-2">
-            <label className="py-2 px-2" htmlFor="yesterday">
-              Yesterday Date
-            </label>
-            <span>{getYesterdayDate()}</span>
-          </div>
-          <textarea
-            type="text"
-            id="yesterday"
-            placeholder="Yesterday Task here..."
-            className="outline-none w-full border-[1px] p-2"
-            name="yesterday_task"
-            value={yesterday_task}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="flex flex-col text-xl">
-          <div className="flex items-center justify-between px-2">
-            <label className="py-2 px-2" htmlFor="today_task">
-              Today Date
-            </label>
-            <span>{getCurrentDate()}</span>
-          </div>
-          <textarea
-            type="text"
-            id="today_task"
-            placeholder="Today Task here..."
-            className="outline-none w-full border-[1px] p-2"
-            name="today_task"
-            value={today_task}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="flex flex-col text-xl">
-          <label className="py-2 px-2" htmlFor="role_block">
-            Role Block
-          </label>
-          <textarea
-            type="text"
-            id="role_block"
-            placeholder="Role Back..."
-            className="outline-none w-full border-[1px] p-2"
-            name="role_block"
-            onChange={handleChange}
-            value={role_block}
-          />
-        </div>
-        <button
-          type="submit"
-          className="font-bold text-white  w-full p-2 bg-blue-400 mt-2"
-        >
-          {currentId ? "Update Task" : "Create Task"}
-        </button>
-      </form>
+      ) : (
+        <AuthForm onLogin={handleLogin} />
+      )}
     </div>
   );
 };
