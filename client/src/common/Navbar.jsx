@@ -8,9 +8,15 @@ const Navbar = ({ isAuthenticated, handleLogout }) => {
   return (
     <div className="navbar">
       <div className="containerNav">
-        <NavLink to="/AuthForm">
-          <img src="/logo.png" alt="Your Logo" className="logo-image" />
+        <NavLink to="/auth_form">
+          <img
+            src="amazon.png"
+            alt="Your Logo"
+            className="logo-image"
+            style={{ width: "100px", height: "auto" }}
+          />
         </NavLink>
+
         <ul className="navbar-nav">
           <li className="nav-item">
             <NavLink to="/user" className="nav-link">

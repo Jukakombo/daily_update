@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login, isAdmin } from "../auth"; // Adjust the path based on your project structure
+import { login, isAdmin } from "../auth";
 import "../AuthForm.css";
 
 const AuthForm = ({ onLogin }) => {
@@ -34,7 +34,18 @@ const AuthForm = ({ onLogin }) => {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button onClick={handleLogin}>
+        <button
+          onClick={handleLogin}
+          style={{
+            backgroundColor: "#87CEFA",
+            color: "white",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "16px",
+            border: "none",
+          }}
+        >
           <span>Login</span>
         </button>
       </div>

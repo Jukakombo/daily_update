@@ -103,7 +103,11 @@ const Form = ({ currentId, setCurrentId }) => {
             : "Task created successfully!"
         );
 
-        redirect("/admin_page");
+        // Reset the form state here
+        setFormData(initialState);
+
+        // Refresh the page
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error:", error);
