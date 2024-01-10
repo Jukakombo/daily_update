@@ -18,7 +18,7 @@ const Navbar = ({ isAuthenticated, handleLogout }) => {
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/admin_page" className="nav-link">
+            <NavLink to="/admin" className="nav-link">
               Admin
             </NavLink>
           </li>

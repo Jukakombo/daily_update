@@ -1,39 +1,44 @@
-// client/src/App.js
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Navbar from "./common/Navbar";
+import { useEffect, useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Footer from "./common/Footer";
 import Form from "./components/Form";
-import AdminPage from "./components/AdminPage";
 import AuthForm from "./components/AuthForm";
-import PrivateRoute from "./components/PrivateRoute.jsx";
-import { logout, getCurrentUser } from "./auth.js";
+import TableData from "./components/TableData";
+import { getContacts } from "./actions/Contacts";
+import { useDispatch } from "react-redux";
+import Register from "./components/Register";
 
 const App = () => {
-  const handleLogout = () => {
-    logout();
-  };
+  const dispatch = useDispatch();
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
 
-  const handleLogin = () => {
-    // Your login logic here
-    console.log("User logged in");
+  useEffect(() => {
+    dispatch(getContacts());
+  }, [dispatch]);
+
+  const ProtectedRoute = ({ element }) => {
+    if (!user) {
+      return <Navigate to="/user" />;
+    }
+
+    return element;
   };
 
   return (
     <>
-      <Navbar
-        isAuthenticated={!!getCurrentUser()}
-        handleLogout={handleLogout}
-      />
       <Routes>
-        <Route path="/user" element={<Form />} />
+        <Route path="/daily-record" element={<Form />} />
+        <Route path="/" element={<AuthForm />} />
         <Route
-          path="/admin_page"
-          element={<AdminPage />}
-          allowedRole="admin_page"
+          path="/admin"
+          element={
+            <ProtectedRoute
+              element={<TableData user={user} setUser={setUser} />}
+            />
+          }
         />
-        {/* Pass onLogin prop to AuthForm */}
-        <Route path="/auth_form" element={<AuthForm onLogin={handleLogin} />} />
+        <Route path="/user" element={<AuthForm />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
       <Footer />
     </>

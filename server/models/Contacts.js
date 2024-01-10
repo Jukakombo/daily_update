@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 const contactSchema = mongoose.Schema(
   {
-    name: "",
-    yesterday_task: "",
-    yesterday_date: "",
-    today_task: "",
-    today_date: "",
-    role_block: "",
+    name: String,
+    yesterday_task: String,
+    yesterday_date: String,
+    today_task: String,
+    today_date: String,
+    role_block: String,
   },
   { timestamps: true }
 );
