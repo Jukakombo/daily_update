@@ -73,6 +73,13 @@ const Form = ({ currentId, setCurrentId }) => {
       return;
     }
 
+    // Validate form fields
+    if (!name || !yesterday_task || !today_task || !role_block) {
+      setError("Please fill in all the required fields.");
+      setTimeout(() => setError(""), 3000);
+      return;
+    }
+
     setLoading(true);
 
     const headers = {
@@ -164,10 +171,22 @@ const Form = ({ currentId, setCurrentId }) => {
                 value={today_task}
                 onChange={handleChange}
               >
-                <option value="">Select task for today</option>
-                <option value="task1">Task 1</option>
-                <option value="task2">Task 2</option>
-                {/* Add more options as needed */}
+                <option value="">Choose a task...</option>
+                <option value="meeting">Meeting</option>
+                <option value="writing">Writing</option>
+                <option value="development">Development</option>
+                <option value="testing">Testing</option>
+                <option value="bug">Bug Fixing</option>
+                <option value="deployment">Deployment</option>
+                <option value="analysis">Data Analysis</option>
+                <option value="support">Customer Support</option>
+                <option value="research">Research</option>
+                <option value="design">Design</option>
+                <option value="maintenance">Maintenance</option>
+                <option value="presentation">Presentation</option>
+                <option value="email">Emails</option>
+                <option value="training">Training</option>
+                <option value="project">Project Management</option>
               </select>
             </div>
 
@@ -185,10 +204,22 @@ const Form = ({ currentId, setCurrentId }) => {
                 value={yesterday_task}
                 onChange={handleChange}
               >
-                <option value="">Select task for yesterday</option>
-                <option value="task1">Task 1</option>
-                <option value="task2">Task 2</option>
-                {/* Add more options as needed */}
+                <option value="">Choose a task...</option>
+                <option value="meeting">Meeting </option>
+                <option value="writing">Writing </option>
+                <option value="development">Development </option>
+                <option value="testing">Testing </option>
+                <option value="bug">Bug Fixing </option>
+                <option value="deployment">Deployment </option>
+                <option value="analysis">Data Analysis</option>
+                <option value="support">Customer Support </option>
+                <option value="research">Research </option>
+                <option value="design">Design </option>
+                <option value="maintenance">Maintenance </option>
+                <option value="presentation">Presentation </option>
+                <option value="email">Emails </option>
+                <option value="training">Training </option>
+                <option value="project">Project Management</option>
               </select>
             </div>
 
@@ -204,9 +235,21 @@ const Form = ({ currentId, setCurrentId }) => {
                 value={role_block}
               >
                 <option value="">Select a role</option>
-                <option value="role1">Role 1</option>
-                <option value="role2">Role 2</option>
-                {/* Add more options as needed */}
+                <option value="wordpress">WordPress</option>
+                <option value="frontend">Frontend Development</option>
+                <option value="backend">Backend Development</option>
+                <option value="design">Design</option>
+                <option value="testing">Testing</option>
+                <option value="project_management">Project Management</option>
+                <option value="database_admin">Database Administration</option>
+                <option value="dev_ops">DevOps</option>
+                <option value="security">Security</option>
+                <option value="mobile_app">Mobile App Development</option>
+                <option value="data_analysis">Data Analysis</option>
+                <option value="cloud_computing">Cloud Computing</option>
+                <option value="networking">Networking</option>
+                <option value="ui_ux">UI/UX Design</option>
+                <option value="technical_writing">Technical Writing</option>
               </select>
             </div>
 
