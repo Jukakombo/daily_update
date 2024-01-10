@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // Adjust the path based on your project structure
+=======
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { login, isAdmin } from "../auth";
+>>>>>>> 00d999d041d6f9c368bb494089c87bdaa3b466e9
 import "../AuthForm.css";
 import { useDispatch } from "react-redux";
 import { signin } from "../actions/user";
@@ -68,6 +74,24 @@ const AuthForm = () => {
         </div>
       </form>
 
+<<<<<<< HEAD
+=======
+        <button
+          onClick={handleLogin}
+          style={{
+            backgroundColor: "#87CEFA",
+            color: "white",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "16px",
+            border: "none",
+          }}
+        >
+          <span>Login</span>
+        </button>
+      </div>
+>>>>>>> 00d999d041d6f9c368bb494089c87bdaa3b466e9
       <div className="login-image"></div>
     </div>
   );
